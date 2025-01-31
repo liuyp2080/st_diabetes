@@ -70,7 +70,7 @@ for message in st.session_state.messages:
 
 # 如果最后一条消息不是来自助手，则生成新的响应
 if st.session_state.messages[-1]["role"] != "assistant":
-    with st.chat_message("assistant",avatar="🤖"):
+    with st.chat_message("assistant"):
         with st.spinner("Thinking..."):
             # 调用main函数处理用户输入，并获取响应
             response = main(prompt)
