@@ -31,13 +31,37 @@ st.set_page_config(
     page_icon="❤️",    
     layout="wide",    
     initial_sidebar_state="expanded")    
+import base64
 
+def get_base64_of_bin_file(bin_file):
+    with open(bin_file, 'rb') as f:
+        data = f.read()
+    return base64.b64encode(data).decode()
+
+def set_png_as_page_bg(png_file):
+    bin_str = get_base64_of_bin_file(png_file)
+    page_bg_img = '''
+    <style>
+    [data-testid="stSidebar"] {
+            min-width: 450px;
+            max-width: 450px;
+        }
+    .stApp {
+    background-image: url("data:image/png;base64,%s");
+    background-size: cover;
+    }
+    </style>
+    ''' % bin_str
+    
+    st.markdown(page_bg_img, unsafe_allow_html=True)
+    return
+
+set_png_as_page_bg('background.png')
 
 st.header('🤖精准化糖尿病知识问答')
  
 with st.sidebar:
-    st.header('📚精准化糖尿病知识问答')
-    '---'
+
     with st.container():
         st.write('说明：')
         st.write('''该APP的主要功能是使用用户输入的医学数据对用户第3和第5年糖尿病风险以及通过SHAP分析得到的各个变量的对预测结果的贡献值。
@@ -49,6 +73,12 @@ with st.sidebar:
     2. 输入模拟数据到预测模型(或者复制数据到对话框)
     3. 解释结果                   
     ''')
+    '---'
+    st.write("模型效能评价：")
+    st.image('time_dependent_auc.png')
+    st.write('变量重要性：')
+    st.image('variable_important.png')
+    
     
 # 经典的问句
 # api_key=st.secrets["API_key"]
